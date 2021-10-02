@@ -1,32 +1,35 @@
-import settings from "./settings"
 
-export default class ImagesApiService {
-    constructor() {
+// export default class ImagesApiService {
+//     constructor() {      
+//         this.searchQuery = ''
+//         this.page = 1
+//         this.BASE_URL = 'https://pixabay.com/api/',
+//         this.IMAGE_TYPE = 'photo',
+//         this.ORIENTATION = 'horizontal',
+//         this.QUANTITY_PER_PAGE = 12,
+//         this.KEY = '23635277-6f81df1acb0b4fe12e608e34f'
+//     }
+
+//     fetchGallery() {
+
+//         const url = `${this.BASE_URL}?image_type=${this.IMAGE_TYPE}&orientation=${this.ORIENTATION}&q=${this.searchQuery}&page=${this.page}&per_page=${this.QUANTITY_PER_PAGE}&key=${this.KEY}`
         
-        this.searchQuery = ''
-        this.page = 1
-    
-    }
+//         return fetch(url).then(response => response.json()).then(console.log)
+//     }
 
-    fetchGallery() {
-        const url = `${settings.BASE_URL}/?image_type=${settings.IMAGE_TYPE}&orientation=${settings.ORIENTATION}&q=${this.searchQuery}&page=${this.page}&per_page=${settings.QUANTITY_PER_PAGE}&key=${settings.KEY}`
-        
-        return fetch(url).then(response => response.json()).then(console.log)
-    }
+//     get query() {
+//         return this.searchQuery;
+//     }
+//     set query(newQuery) {
+//         return this.searchQuery = newQuery;
+//     }
 
-    get query() {
-        return this.searchQuery;
-    }
-    set query(newQuery) {
-        return this.searchQuery = newQuery;
-    }
+//     incrementPage() {
+//         this.page += 1
+//     }
 
-    incrementPage() {
-        this.page += 1
-    }
+//     resetPage() {
+//         this.page = 1
+//     }
 
-    resetPage() {
-        this.page = 1
-    }
-
-}
+// }

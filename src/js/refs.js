@@ -1,4 +1,7 @@
-export default  {
+export default function getRefs() {
+  return {
     searchInput: document.querySelector('.search-form'),
-    galleryList: document.querySelector('.gallery js-gallery'),  
+    searchBtn : document.querySelector('.search-btn'),
+    galleryList: document.querySelector('.gallery js-gallery'),
   }
+}
