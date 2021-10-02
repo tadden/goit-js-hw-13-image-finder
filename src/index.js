@@ -1,8 +1,8 @@
 import './sass/main.scss';
-// import ImagesApiService from './js/apiService';
-// import getRefs from './js/refs';
+import imgTemplate from './templates/img-template.hbs';
+import ImagesApiService from './js/apiService';
+import getRefs from './js/refs';
 // import LoadMoreBtn from './js/load-more-btn';
-// import imageTemplate from './templates/imgTemplate.hbs';
 
 // const debounce = require('lodash.debounce')
 
@@ -18,20 +18,25 @@ import './sass/main.scss';
 // defaults.width = '400px'
 // defaults.delay = '3000'
 
-const refs = {
-  searchInput: document.querySelector('.search-form'),
-  searchBtn: document.querySelector('.search-btn'),
-  galleryList: document.querySelector('.gallery js-gallery'),
-};
+const refs = getRefs();
 
+refs.searchBtn.addEventListener('click', onSearch)
+refs.loadMoreBtn.addEventListener('click', onLoadMore)
 
-refs.searchBtn.addEventListener('submit', onSearch)
-
+const imagesApiService = new ImagesApiService()
 
 function onSearch(e) {
   e.preventDefault();
-  console.log("hello!")  
+  imagesApiService.query = e.currentTarget.value
+  imagesApiService.resetPage();
+  imagesApiService.fetchImages().then(rendering);
 }
-// fetch('https://pixabay.com/api/?image_type=photo&orientation=horizontal&q=cat&page=1&per_page=12&key=23635277-6f81df1acb0b4fe12e608e34f')
-//     .then(response => response.json())
-//     .then(console.log);
+
+function onLoadMore(e) {
+  imagesApiService.fetchImages().then(rendering);
+}
+
+function rendering(hits) {
+  refs.galleryList.insertAdjacentHTML('beforeend', imgTemplate(hits))
+}
+
