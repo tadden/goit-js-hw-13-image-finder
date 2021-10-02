@@ -2,41 +2,70 @@ import './sass/main.scss';
 import imgTemplate from './templates/img-template.hbs';
 import ImagesApiService from './js/apiService';
 import getRefs from './js/refs';
-// import LoadMoreBtn from './js/load-more-btn';
+import LoadMoreBtn from './js/load-more-btn';
 
-// const debounce = require('lodash.debounce')
+const debounce = require('lodash.debounce')
 
-// Подключение плагина  PNotify
-// import { alert, notice, info, success, error, defaultModules } from '@pnotify/core/dist/PNotify.js'
-// import * as PNotifyMobile from '@pnotify/mobile/dist/PNotifyMobile.js'
-// import '@pnotify/core/dist/PNotify.css'
-// import '@pnotify/core/dist/BrightTheme.css'
-// defaultModules.set(PNotifyMobile, {})
+import { alert, defaultModules } from '@pnotify/core/dist/PNotify.js'
+import * as PNotifyMobile from '@pnotify/mobile/dist/PNotifyMobile.js'
+import '@pnotify/core/dist/PNotify.css'
+import '@pnotify/core/dist/BrightTheme.css'
+defaultModules.set(PNotifyMobile, {})
 
-// // Настройка плагина  PNotify
-// import { defaults } from '@pnotify/core'
-// defaults.width = '400px'
-// defaults.delay = '3000'
+// Настройка плагина  PNotify
+import { defaults } from '@pnotify/core'
+defaults.width = '400px'
+defaults.delay = '3000'
 
 const refs = getRefs();
 
-refs.searchBtn.addEventListener('click', onSearch)
-refs.loadMoreBtn.addEventListener('click', onLoadMore)
+const apiService = new ImagesApiService();
 
-const imagesApiService = new ImagesApiService()
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more"]',
+  hidden: true,
+});
 
 function onSearch(e) {
   e.preventDefault();
-  imagesApiService.query = e.currentTarget.value
-  imagesApiService.resetPage();
-  imagesApiService.fetchImages().then(rendering);
+  apiService.query = e.target.value.trim();
+  apiService.resetPage();
+  
+  if (!apiService.query) {
+    clearImageContainer();
+    return alert('Please input something')
+  }
+
+  loadMoreBtn.show();
+  loadMoreBtn.disable();
+
+  clearImageContainer();
+  apiService.fetchImages().then(rendering).catch(onFetchError)
 }
 
 function onLoadMore(e) {
-  imagesApiService.fetchImages().then(rendering);
+  loadMoreBtn.disable();
+  apiService.fetchImages().then(rendering).catch(onFetchError);
+  
 }
 
-function rendering(hits) {
-  refs.galleryList.insertAdjacentHTML('beforeend', imgTemplate(hits))
+function rendering(img) {
+  loadMoreBtn.enable()
+    refs.galleryList.insertAdjacentHTML('beforeend', imgTemplate(img));
+  }
+  
+  
+
+function clearImageContainer () {
+    refs.galleryList.innerHTML = '';
 }
 
+
+function onFetchError(err) {
+  refs.imagesContainer.innerHTML = ''
+  loadMoreBtn.hide()
+  error({ text: 'Server error \n Please try again later' })
+}
+
+loadMoreBtn.refs.button.addEventListener('click', onLoadMore)
+refs.searchInput.addEventListener('input', debounce(onSearch, 1000))

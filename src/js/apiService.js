@@ -1,19 +1,15 @@
 
 export default class ImagesApiService {
     constructor() {      
-        this.searchQuery = ''
-        this.page = 1
-        this.BASE_URL = 'https://pixabay.com/api/',
-        this.IMAGE_TYPE = 'photo',
-        this.ORIENTATION = 'horizontal',
-        this.QUANTITY_PER_PAGE = 12,
-        this.KEY = '23635277-6f81df1acb0b4fe12e608e34f'
+        this.searchQuery = '';
+        this.API_KEY = '23521074-c1847750f84d7ba2d97c15f75';
+        this.BASE_URL = 'https://pixabay.com/api/';
+        this.page = 1;
     }
 
     fetchImages() {
 
-        const url = `${this.BASE_URL}?image_type=${this.IMAGE_TYPE}&orientation=${this.ORIENTATION}&q=${this.searchQuery}&page=${this.page}&per_page=${this.QUANTITY_PER_PAGE}&key=${this.KEY}`
-        
+        const url = `${this.BASE_URL}?image_type=photo&orientation=horizontal&q=${this.searchQuery}&page=${this.page}&per_page=8&key=${this.API_KEY}`               
         return fetch(url).then(response => response.json())
             .then(data => {
                 this.incrementPage();
